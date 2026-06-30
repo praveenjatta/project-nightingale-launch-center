@@ -1,101 +1,84 @@
-# Project Nightingale Launch Center
+🚀 Project Nightingale Launch Center
 
-A multi-agent voice AI system built in ElevenLabs that lets launch stakeholders query real-time product launch information by speaking — routing questions automatically to the right specialist agent.
+A multi-agent voice AI system built with ElevenLabs. Stakeholders call the agent during a product launch and get instant, role-appropriate answers — technical readiness, marketing status, or an executive briefing — routed automatically to the right specialist.
 
----
 
-## What This Does
+🧠 Workflow Overview
 
-Instead of searching through launch documents, Slack threads, and status decks, stakeholders can call this voice agent and ask questions like:
+5-node multi-agent architecture:
 
-- *"Are we ready for launch from an engineering perspective?"*
-- *"What's our marketing plan for launch week?"*
-- *"Give me a 30-second executive summary — are we on track?"*
-
-The system routes each question to the right specialist and responds with grounded, concise answers sourced directly from the knowledge base.
-
----
-
-## Architecture
-
-**5 nodes · 12 edges · No code**
-
-```
 Start
-  └── Greeter (routes intent only — no KB, no hallucination)
-        ├── Technical Readiness Specialist
-        ├── GTM & Marketing Specialist
-        └── Executive Briefing Specialist
-                    └── End
-```
+    ↓
+Greeter Agent                  → Identifies intent, routes only (no KB, no answers)
+    ↓
+Technical Readiness Specialist → Sprint status, QA, deployment, rollback plan
+GTM & Marketing Specialist     → Campaigns, press, messaging, sales enablement
+Executive Briefing Specialist  → High-level status, risks, budget, metrics
+    ↓
+End
 
-**Routing:**
-- 3 forward edges (Greeter → each specialist)
-- 3 end edges (each specialist → End)
-- 6 cross-routing edges (all specialists ↔ bidirectional)
+🔁 6 cross-routing edges connect all three specialists bidirectionally, so callers can switch topics mid-conversation without restarting.
 
----
 
-## Specialist Agents
+🛠️ Tech Stack
 
-| Agent | Knowledge Base | Scope |
-|---|---|---|
-| Technical Readiness Specialist | KB_Technical_Readiness.txt + KB_Launch_Plan.txt | Sprint status, QA, bugs, deployment plan, rollback criteria, on-call rotation |
-| GTM & Marketing Specialist | KB_GTM_Marketing.txt + KB_Launch_Plan.txt | Campaigns, press timeline, messaging, competitive landscape, sales enablement |
-| Executive Briefing Specialist | All 3 KB files | High-level status, risk register, budget, success metrics, post-launch plan |
+ToolPurposeElevenLabsConversational voice AI platformFlash ModelLow-latency LLM tuned for voiceKnowledge Base (scoped)Domain-specific grounding per specialistLLM Edge ConditionsIntent-based routing logic
 
-**Greeter:** Routes intent only. No KB assigned. Never answers questions directly.
 
----
+📁 Files
 
-## Knowledge Base
+FileDescriptionBuild_Steps.mdStep-by-step build instructions, system prompts, and edge conditionsKB_Launch_Plan.txtLaunch overview, GTM timeline, stakeholders, risk register, budgetKB_Technical_Readiness.txtSprint status, architecture, QA, deployment, rollback planKB_GTM_Marketing.txtCampaign strategy, messaging, competitive landscape, sales enablementREADME.mdProject documentation
 
-Three scoped knowledge base files covering a fictional mobile app v3.0 launch (redesigned checkout + Perks loyalty program):
 
-- **KB_Launch_Plan.txt** — Launch overview, feature details, GTM timeline, stakeholder roles, success metrics, risk register, budget summary
-- **KB_Technical_Readiness.txt** — Sprint status, architecture, QA results, deployment plan, rollback criteria, team allocation, on-call rotation
-- **KB_GTM_Marketing.txt** — Campaign strategy, channel breakdown, messaging playbook, competitive landscape, sales enablement, marketing metrics
+🚀 How to Use
 
----
 
-## Key Design Decisions
+Clone or download this repo
+Open ElevenLabs Agents
+Create a blank agent and follow Build_Steps.md step by step
+Upload the three KB .txt files to their respective specialist nodes
+Wire the 12 edges (3 forward, 3 end, 6 cross-routing)
+Test in Preview mode with mic on
 
-**Greeter as dispatcher, not concierge** — No KB assigned to the Greeter. It routes based on intent keywords only. This prevents hallucination and keeps routing clean.
 
-**KB scoping per specialist** — Each specialist only sees documents relevant to its domain. Prevents information leakage and attention dilution.
 
-**Cross-routing on all 6 edges** — Users can switch topics mid-conversation without restarting. Every specialist can hand off to every other specialist.
+💡 Example Use Case
 
-**Guardrails in every specialist** — Each agent politely redirects out-of-scope questions to the correct specialist rather than attempting to answer.
+Caller asks: "Are we ready for launch from an engineering perspective?"
 
-**Voice-native response design** — Answers lead with the most important fact first. No bullet dumps. Response length matches urgency.
+Agent routes to: Technical Readiness Specialist
 
----
+Response: Sprint status, QA bug counts, deployment rollout schedule, and rollback criteria — sourced directly from the knowledge base, no guessing.
 
-## Stack
+Caller follows up: "What's our marketing plan for launch week?"
 
-- **Platform:** ElevenLabs Conversational AI
-- **Model:** Flash (low latency, voice-optimized)
-- **Architecture pattern:** Multi-agent orchestration with LLM-based intent routing
-- **Knowledge base:** Plain text files, domain-scoped per specialist
+Agent cross-routes to: GTM & Marketing Specialist — no restart needed.
 
----
 
-## Files in This Repo
+🔑 Key Design Decisions
 
-```
-├── README.md
-├── Build_Steps.md                  # Step-by-step build instructions
-├── KB_Launch_Plan.txt              # Launch plan knowledge base
-├── KB_Technical_Readiness.txt      # Engineering status knowledge base
-└── KB_GTM_Marketing.txt            # Marketing playbook knowledge base
-```
 
----
+Greeter as dispatcher, not concierge — No KB assigned. Routes on intent only, never answers directly.
+KB scoping per specialist — Each specialist sees only its relevant documents, preventing information leakage.
+Cross-routing on all 6 edges — Full bidirectional handoff between specialists for natural topic switching.
+Guardrails baked into every prompt — Specialists redirect out-of-scope questions instead of guessing.
+Voice-native response design — Lead with the answer, use real numbers, match response length to urgency.
 
-## Context
 
-Built as part of a hands-on exploration of multi-agent voice AI architecture patterns using ElevenLabs. The same Greeter → domain specialists → KB scoping pattern is reusable across any data-heavy operational context.
 
-**Related projects:**
-- [taskflow-product-health-monitor](https://github.com/praveenjatta/taskflow-product-health-monitor) — Same architecture applied to product health querying (user feedback, support tickets, product metrics)
+👤 Author
+
+Praveen Kumar Jatta — Senior Technical Program Manager | AI Automation Consultant
+
+
+🌐 jattaai.com
+💼 linkedin.com/in/praveenjatta
+🐙 github.com/praveenjatta
+📅 Book a free discovery call
+
+
+
+📄 License
+
+MIT License — free to use and modify with attribution.
+Project contentJattaAI Consulting — Business & GrowthCreated by youJattaAI_LinkedIn_InMail_Templates.md64 linesmdpdfpdfContentDEMO GUIDE_ Product Launch Command Center.docxdocx1782764404898_DEMO GUIDE_ Product Launch Command Center.docxdocx1782764935381_ASSIGNMENT SOLUTION GUIDE - Week 4 PMs_TPMs.docxdocxpdfKB_GTM_Marketing.txt122 linestxtKB_Launch_Plan.txt141 linestxtKB_Technical_Readiness.txt129 linestxtProduct Launch Command Center — Build Steps.md258 linesmdASSIGNMENT - Product Health Monitor.docx46 linesdocx1782764404897_KB_GTM_Marketing.txt122 linestxt1782764404897_KB_Technical_Readiness.txt129 linestxt1782764404898_KB_Launch_Plan.txt141 linestxt1782764404898_Product Launch Command Center — Build Steps.md258 linesmd1782764728941_ASSIGNMENT - Product Health Monitor.docx46 linesdocx1782764728942_KB_Product_Metrics.txt216 linestxt1782764728942_KB_Support_Tickets.txt209 linestxt1782764728943_KB_User_Feedback.txt211 linestxt1782764728943_Product_Health_Monitor___Build_Steps.md289 linesmd1782764935382_Week 4 Assignment Solution.txt1 linetxt1782787670502_README.md103 linesmd(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.nonce='Hu3zYKDvo/1j0zJ0vmxGkg==';d.innerHTML="window.__CF$cv$params={r:'a12a215abea32163',t:'MTc4MjYyMjg1Mg=='};var a=document.createElement('script');a.nonce='Hu3zYKDvo/1j0zJ0vmxGkg==';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();
